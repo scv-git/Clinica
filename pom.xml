@@ -130,11 +130,7 @@
             <version>17.3</version>
         </dependency>
 
-        <dependency>
-            <groupId>eu.hansolo.toolbox</groupId>
-            <artifactId>toolbox</artifactId>
-            <version>21.0.9</version>
-        </dependency>
+
 
         <dependency>
             <groupId>eu.hansolo.fx</groupId>
@@ -160,11 +156,7 @@
             <version>11.2.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>eu.hansolo.toolboxfx</groupId>
-            <artifactId>toolboxfx</artifactId>
-            <version>21.0.5</version>
-        </dependency>
+
 
         <dependency>
             <groupId>com.github.almasb</groupId>

@@ -16,7 +16,7 @@ public class Cita {
         this.hora = builder.hora;
     }
 
-    static class Builder {
+    public static class Builder {
         private Medico medico;
         private Paciente paciente;
         private LocalDate fecha;
