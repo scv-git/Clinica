@@ -62,4 +62,9 @@ public class Cita {
     public LocalTime getHora() {
         return hora;
     }
+
+    public String getPacienteNombre() {
+        return paciente.getNombres() + " " + paciente.getApellidos();
+    }
+
 }

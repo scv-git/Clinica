@@ -44,8 +44,8 @@
             </Label>
 
             <Button fx:id="btnGoToForm" onAction="#onGoToForm" prefWidth="200" styleClass="menu-button" text="➕ Crear Cita" />
-            <Button fx:id="btnGoToList" onAction="#onGoToList" prefWidth="200" styleClass="menu-button" text="Paciente" />
-            <Button fx:id="btnGoToListMedico" onAction="#onGoToList" prefWidth="200" styleClass="menu-button" text="Médico" />
+            <Button fx:id="btnGoToPaciente" onAction="#onGoToPaciente" prefWidth="200" styleClass="menu-button" text="Paciente" />
+            <Button fx:id="btnGoToMedico" onAction="#onGoToMedico" prefWidth="200" styleClass="menu-button" text="Médico" />
 
             <Region VBox.vgrow="ALWAYS" />
 

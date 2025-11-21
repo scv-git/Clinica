@@ -3,7 +3,6 @@ package co.edu.uniquindio.clinica.controllers;
 import java.io.IOException;
 
 import co.edu.uniquindio.clinica.model.HelloApplication;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,30 +16,49 @@ public class DashboardController {
 
     @FXML private BorderPane mainContainer;
     @FXML private StackPane contentArea;
+
     @FXML private Button btnGoToForm;
     @FXML private Button btnGoToList;
+    @FXML private Button btnGoToPaciente;
+    @FXML private Button btnGoToMedico;
 
     @FXML
     public void initialize() {
         onGoToDashboard();
     }
 
+    // ➤ Ir a la vista de citas
     @FXML
     private void onGoToForm() {
-        loadView("/resources/FormularioCitas.fxml", "formulario");
+        loadView("/co/edu/uniquindio/clinica/FormularioCitas.fxml", "formulario");
     }
 
 
+    @FXML
+    private void onGoToPaciente() {
+        loadView("/co/edu/uniquindio/clinica/Paciente.fxml", "paciente");
+    }
 
+    // ➤ Ir a la vista de médico
+    @FXML
+    private void onGoToMedico() {
+        loadView("/co/edu/uniquindio/clinica/Medico.fxml", "medico");
+    }
+
+    // ➤ Vista principal
     @FXML
     private void onGoToDashboard() {
         contentArea.getChildren().clear();
-        contentArea.getChildren().add(new Label("Bienvenido al sistema de gestión de Citas Médicas"));
+        Label mensaje = new Label("Bienvenido al sistema de gestión de Citas Médicas");
+        mensaje.setStyle("-fx-font-size: 24px; -fx-text-fill: #555;");
+        contentArea.getChildren().add(mensaje);
     }
 
     public void backToDashboard() {
         onGoToDashboard();
     }
+
+
 
     private void loadView(String fxmlPath, String typeView) {
         try {
@@ -52,7 +70,15 @@ public class DashboardController {
                     FormularioController controller = loader.getController();
                     controller.setDashboardController(this);
                 }
-
+                case "paciente" -> {
+                    PacienteController controller = loader.getController();
+                    controller.setDashboardController(this);
+                }
+                case "medico" -> {
+                    MedicoController controller = loader.getController();
+                    controller.setDashboardController(this);
+                }
+                default -> throw new IllegalArgumentException("Vista no reconocida: " + typeView);
             }
 
             contentArea.getChildren().clear();
@@ -63,12 +89,6 @@ public class DashboardController {
             e.printStackTrace();
         }
     }
-    @FXML
-    private void onGoToList(ActionEvent event) {
-        System.out.println("Ir a lista...");
-        // Aquí después cargas la nueva vista si quieres
-    }
-
 
     private void showAlert(String title, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);

@@ -70,7 +70,7 @@ public class Paciente {
 
     @Override
     public String toString() {
-        return nombres + " " + apellidos;
+        return nombres ;
     }
 
 

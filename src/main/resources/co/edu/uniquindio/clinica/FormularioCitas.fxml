@@ -14,7 +14,7 @@
       stylesheets="@styles1.css"
       xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="co.edu.uniquindio.poo.controllers.FormularioController">
+      fx:controller="co.edu.uniquindio.clinica.controllers.FormularioController">
 
     <padding>
         <Insets bottom="30" left="30" right="30" top="30" />
@@ -87,7 +87,7 @@
             <VBox.margin>
                 <Insets top="20" />
             </VBox.margin>
-            <Button fx:id="btnCancel" onAction="#onCancel" text="Cancelar" />
+
             <Button fx:id="btnSave" onAction="#onSaveCita" text="Guardar Cita">
                 <font>
                     <Font name="System Bold" size="14" />
