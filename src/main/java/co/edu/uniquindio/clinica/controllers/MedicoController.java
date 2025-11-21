@@ -1,6 +1,6 @@
 package co.edu.uniquindio.clinica.controllers;
 
-import co.edu.uniquindio.clinica.model.Clinica;
+import co.edu.uniquindio.clinica.facade.ClinicaFacade;
 import co.edu.uniquindio.clinica.model.Cita;
 import co.edu.uniquindio.clinica.model.Medico;
 import javafx.fxml.FXML;
@@ -17,57 +17,43 @@ public class MedicoController {
 
     @FXML private TableView<Cita> tablaCitas;
     @FXML private TableColumn<Cita, String> colPaciente;
-    @FXML private TableColumn<Cita, String> colFecha;
-    @FXML private TableColumn<Cita, String> colHora;
+    @FXML private TableColumn<Cita, Object> colFecha;
+    @FXML private TableColumn<Cita, Object> colHora;
 
-    private Clinica clinica;
-    private DashboardController dashboardController;
+    private ClinicaFacade facade;
 
+    @FXML
     public void initialize() {
-        clinica = Clinica.getInstance();
+        facade = new ClinicaFacade();
 
-        comboMedicos.setItems(clinica.getListamedicos());
+        comboMedicos.setItems(facade.getMedicos());
 
         colPaciente.setCellValueFactory(new PropertyValueFactory<>("pacienteNombre"));
         colFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         colHora.setCellValueFactory(new PropertyValueFactory<>("hora"));
 
-        tablaCitas.setItems(clinica.getListaCitas());
+        tablaCitas.setItems(facade.getCitas());
     }
 
     @FXML
     private void onMedicoSeleccionado() {
         Medico medicoSeleccionado = comboMedicos.getSelectionModel().getSelectedItem();
-        if (medicoSeleccionado == null) return;
-
-        var citasFiltradas = clinica.getListaCitas().filtered(
-                c -> c.getMedico().equals(medicoSeleccionado)
-        );
-
-        tablaCitas.setItems(citasFiltradas);
+        if (medicoSeleccionado == null) {
+            tablaCitas.setItems(facade.getCitas());
+            return;
+        }
+        tablaCitas.setItems(facade.getCitasPorMedico(medicoSeleccionado));
     }
 
     @FXML
     private void onGuardarMedico() {
-
-        if (txtNombreMedico.getText().isEmpty() ||
-                txtApellido.getText().isEmpty() ||
-                txtIdentificación.getText().isEmpty()) {
-
+        if (txtNombreMedico.getText().isEmpty() || txtApellido.getText().isEmpty() || txtIdentificación.getText().isEmpty()) {
             mostrarAlerta("Error", "Todos los campos son obligatorios", Alert.AlertType.ERROR);
             return;
         }
 
-        Medico medico = new Medico.Builder()
-                .setNombres(txtNombreMedico.getText())
-                .setApellidos(txtApellido.getText())
-                .setIdentifiacion(txtIdentificación.getText())
-                .build();
-
-        clinica.agregarMedico(medico);
-
-        comboMedicos.setItems(clinica.getListamedicos());
-
+        facade.registrarMedico(txtNombreMedico.getText(), txtApellido.getText(), txtIdentificación.getText(), "");
+        comboMedicos.setItems(facade.getMedicos());
         limpiarCampos();
         mostrarAlerta("Éxito", "Médico registrado correctamente.", Alert.AlertType.INFORMATION);
     }
@@ -84,9 +70,5 @@ public class MedicoController {
         alert.setTitle(titulo);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-
-    public void setDashboardController(DashboardController dashboardController) {
-        this.dashboardController = dashboardController;
     }
 }

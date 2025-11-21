@@ -3,13 +3,15 @@ package co.edu.uniquindio.clinica.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+
+
 public class Clinica {
 
-    private ObservableList<Medico> listamedicos;
-    private ObservableList<Paciente> listapacientes;
-    private ObservableList<Cita> listaCitas;
+    private static Clinica instance;
 
-    private static Clinica instancia;
+    private final ObservableList<Medico> listamedicos;
+    private final ObservableList<Paciente> listapacientes;
+    private final ObservableList<Cita> listaCitas;
 
     private Clinica() {
         listamedicos = FXCollections.observableArrayList();
@@ -18,8 +20,10 @@ public class Clinica {
     }
 
     public static Clinica getInstance() {
-        if (instancia == null) instancia = new Clinica();
-        return instancia;
+        if (instance == null) {
+            instance = new Clinica();
+        }
+        return instance;
     }
 
     public ObservableList<Medico> getListamedicos() { return listamedicos; }

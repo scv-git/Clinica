@@ -1,12 +1,9 @@
 package co.edu.uniquindio.clinica.controllers;
 
-import co.edu.uniquindio.clinica.model.Clinica;
+import co.edu.uniquindio.clinica.facade.ClinicaFacade;
 import co.edu.uniquindio.clinica.model.Paciente;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class PacienteController {
@@ -20,34 +17,27 @@ public class PacienteController {
     @FXML private TableColumn<Paciente, String> colDocumento;
     @FXML private TableColumn<Paciente, String> colTelefono;
 
-    private DashboardController dashboardController;
-    private Clinica clinica;
+    private ClinicaFacade facade;
 
+    @FXML
     public void initialize() {
-        clinica = Clinica.getInstance();
+        facade = new ClinicaFacade();
 
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombres"));
         colDocumento.setCellValueFactory(new PropertyValueFactory<>("identifiacion"));
         colTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
 
-        tablaPacientes.setItems(clinica.getListapacientes());
+        tablaPacientes.setItems(facade.getPacientes());
     }
 
     @FXML
     private void onGuardarPaciente() {
-
         if (txtNombre.getText().isEmpty() || txtDocumento.getText().isEmpty() || txtTelefono.getText().isEmpty()) {
             mostrarAlerta("Error", "Todos los campos son obligatorios", Alert.AlertType.ERROR);
             return;
         }
 
-        Paciente paciente = new Paciente.Builder()
-                .setNombres(txtNombre.getText())
-                .setIdentifiacion(txtDocumento.getText())
-                .setTelefono(txtTelefono.getText())
-                .build();
-
-        clinica.agregarPaciente(paciente);
+        facade.registrarPaciente(txtNombre.getText(), "", txtDocumento.getText(), txtTelefono.getText(), "", "");
 
         limpiarCampos();
         mostrarAlerta("Éxito", "Paciente registrado correctamente.", Alert.AlertType.INFORMATION);
@@ -65,9 +55,5 @@ public class PacienteController {
         alert.setTitle(titulo);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-
-    public void setDashboardController(DashboardController dashboardController) {
-        this.dashboardController = dashboardController;
     }
 }

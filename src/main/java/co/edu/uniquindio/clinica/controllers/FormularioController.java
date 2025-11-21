@@ -1,10 +1,11 @@
 package co.edu.uniquindio.clinica.controllers;
 
+import co.edu.uniquindio.clinica.facade.ClinicaFacade;
+import co.edu.uniquindio.clinica.model.Medico;
+import co.edu.uniquindio.clinica.model.Paciente;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import co.edu.uniquindio.clinica.model.*;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class FormularioController {
@@ -17,17 +18,14 @@ public class FormularioController {
     @FXML private Button btnCancel;
     @FXML private Button btnSave;
 
-    private Clinica clinica;
-    private DashboardController dashboardController;
+    private ClinicaFacade facade;
 
     @FXML
     public void initialize() {
-        clinica = Clinica.getInstance();
+        facade = new ClinicaFacade();
 
-
-        cbMedico.setItems(clinica.getListamedicos());
-        cbPaciente.setItems(clinica.getListapacientes());
-
+        cbMedico.setItems(facade.getMedicos());
+        cbPaciente.setItems(facade.getPacientes());
 
         txtPrecio.setText("$4.700");
         txtPrecio.setEditable(false);
@@ -35,14 +33,10 @@ public class FormularioController {
 
     @FXML
     private void onSaveCita() {
-
-        if (!validarCampos())
+        if (cbMedico.getValue() == null || cbPaciente.getValue() == null || dpFecha.getValue() == null || txtHora.getText().trim().isEmpty()) {
+            mostrarAlerta("Error", "Todos los campos son obligatorios", Alert.AlertType.ERROR);
             return;
-
-        Medico medico = cbMedico.getValue();
-        Paciente paciente = cbPaciente.getValue();
-        LocalDate fecha = dpFecha.getValue();
-
+        }
 
         LocalTime hora;
         try {
@@ -52,43 +46,11 @@ public class FormularioController {
             return;
         }
 
-        Cita cita = new Cita.Builder()
-                .setMedico(medico)
-                .setPaciente(paciente)
-                .setFecha(fecha)
-                .setHora(hora)
-                .build();
-
-        clinica.agregarCita(cita); // <-- Se guarda en la clínica
+        double precio = 4700.0; // fijo por ahora
+        facade.registrarCita(cbMedico.getValue(), cbPaciente.getValue(), dpFecha.getValue(), hora, precio);
 
         mostrarAlerta("Éxito", "Cita creada correctamente.", Alert.AlertType.INFORMATION);
         limpiarCampos();
-    }
-
-
-    private boolean validarCampos() {
-
-        if (cbMedico.getValue() == null) {
-            mostrarAlerta("Validación", "Debe seleccionar un médico.", Alert.AlertType.WARNING);
-            return false;
-        }
-
-        if (cbPaciente.getValue() == null) {
-            mostrarAlerta("Validación", "Debe seleccionar un paciente.", Alert.AlertType.WARNING);
-            return false;
-        }
-
-        if (dpFecha.getValue() == null) {
-            mostrarAlerta("Validación", "Debe seleccionar una fecha.", Alert.AlertType.WARNING);
-            return false;
-        }
-
-        if (txtHora.getText().trim().isEmpty()) {
-            mostrarAlerta("Validación", "Debe ingresar la hora (Ej: 14:30).", Alert.AlertType.WARNING);
-            return false;
-        }
-
-        return true;
     }
 
     private void limpiarCampos() {
@@ -96,18 +58,14 @@ public class FormularioController {
         cbPaciente.setValue(null);
         dpFecha.setValue(null);
         txtHora.clear();
-        txtPrecio.setText("$4.700"); // Restablecer precio
+        txtPrecio.setText("$4.700");
     }
 
-    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(titulo);
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
         alert.setHeaderText(null);
+        alert.setTitle(titulo);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-
-    public void setDashboardController(DashboardController dashboardController) {
-        this.dashboardController = dashboardController;
     }
 }
