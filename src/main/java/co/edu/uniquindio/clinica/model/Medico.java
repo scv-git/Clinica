@@ -42,4 +42,9 @@ public class Medico {
             return new Medico(this);
         }
     }
+    @Override
+    public String toString() {
+        return nombres + " " + apellidos;
+    }
+
 }

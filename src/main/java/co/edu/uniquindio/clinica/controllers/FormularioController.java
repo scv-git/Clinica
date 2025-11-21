@@ -1,13 +1,15 @@
-package co.edu.uniquindio.poo.controllers;
+package co.edu.uniquindio.clinica.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
 import co.edu.uniquindio.clinica.model.Cita;
 import co.edu.uniquindio.clinica.model.Medico;
 import co.edu.uniquindio.clinica.model.Paciente;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class FormularioController {
 
@@ -24,74 +26,100 @@ public class FormularioController {
     private TextField txtHora;
 
     @FXML
-    private TextField txtPrecio;
-
-    @FXML
-    private Button btnSave;
+    private TextField txtPrecio; // (si agregas precio)
 
     @FXML
     private Button btnCancel;
 
+    @FXML
+    private Button btnSave;
+
+    private DashboardController dashboardController;
     @FXML
     public void initialize() {
         cargarMedicos();
         cargarPacientes();
     }
 
-    // -----------------------------------------------------------
-    //        MÉTODOS PARA CARGAR DATOS INICIALES
-    // -----------------------------------------------------------
-
+    // -----------------------------------------------------
+    //   Cargar datos iniciales (PRUEBA) (puedes reemplazar)
+    // -----------------------------------------------------
     private void cargarMedicos() {
-        // Aquí debes cargar tus médicos reales
         cbMedico.getItems().addAll(
-                new Medico("M001", "Carlos Pérez"),
-                new Medico("M002", "Ana López")
+                new Medico.Builder()
+                        .setNombres("Carlos")
+                        .setApellidos("Pérez")
+                        .setIdentifiacion("M001")
+                        .build(),
+
+                new Medico.Builder()
+                        .setNombres("Ana")
+                        .setApellidos("López")
+                        .setIdentifiacion("M002")
+                        .build()
         );
     }
 
     private void cargarPacientes() {
-        // Aquí debes cargar tus pacientes reales
         cbPaciente.getItems().addAll(
-                new Paciente("P001", "Juan Martínez"),
-                new Paciente("P002", "María Rodríguez")
+                new Paciente.Builder()
+                        .setNombres("Juan")
+                        .setApellidos("Martínez")
+                        .setIdentifiacion("P001")
+                        .setTelefono("3100000000")
+                        .setdireccion("Calle 123")
+                        .setEmail("juan@email.com")
+                        .build(),
+
+                new Paciente.Builder()
+                        .setNombres("María")
+                        .setApellidos("Rodríguez")
+                        .setIdentifiacion("P002")
+                        .setTelefono("3200000000")
+                        .setdireccion("Cra 10")
+                        .setEmail("maria@email.com")
+                        .build()
         );
     }
 
-    // -----------------------------------------------------------
-    //                 BOTÓN GUARDAR CITA
-    // -----------------------------------------------------------
-
+    // -----------------------------------------------------
+    //               Guardar Cita
+    // -----------------------------------------------------
     @FXML
     private void onSaveCita() {
+
+        if (!validarCampos())
+            return;
+
+        Medico medico = cbMedico.getValue();
+        Paciente paciente = cbPaciente.getValue();
+        LocalDate fecha = dpFecha.getValue();
+
+        // Convertir texto a LocalTime
+        LocalTime hora;
         try {
-            // Validar campos
-            if (!validarCampos()) {
-                return;
-            }
-
-            Medico medico = cbMedico.getValue();
-            Paciente paciente = cbPaciente.getValue();
-            LocalDate fecha = dpFecha.getValue();
-            String hora = txtHora.getText().trim();
-            double precio = Double.parseDouble(txtPrecio.getText().trim());
-
-            // Crear cita
-            Cita cita = new Cita(medico, paciente, fecha, hora, precio);
-
-            mostrarAlerta("Éxito", "Cita guardada correctamente.", Alert.AlertType.INFORMATION);
-
-            cerrarVentana();
-
+            hora = LocalTime.parse(txtHora.getText().trim());
         } catch (Exception e) {
-            mostrarAlerta("Error", "Ha ocurrido un error: " + e.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta("Error en la hora", "Formato de hora incorrecto. Ejemplo: 14:30", Alert.AlertType.ERROR);
+            return;
         }
+
+        // Crear la cita usando tu Builder REAL
+        Cita cita = new Cita.Builder()
+                .setMedico(medico)
+                .setPaciente(paciente)
+                .setFecha(fecha)
+                .setHora(hora)
+                .build();
+
+        mostrarAlerta("Éxito", "Cita creada correctamente.", Alert.AlertType.INFORMATION);
+
+        cerrarVentana();
     }
 
-    // -----------------------------------------------------------
-    //                VALIDACIÓN DE CAMPOS
-    // -----------------------------------------------------------
-
+    // -----------------------------------------------------
+    //               Validación de campos
+    // -----------------------------------------------------
     private boolean validarCampos() {
 
         if (cbMedico.getValue() == null) {
@@ -110,38 +138,24 @@ public class FormularioController {
         }
 
         if (txtHora.getText().trim().isEmpty()) {
-            mostrarAlerta("Validación", "Debe ingresar la hora.", Alert.AlertType.WARNING);
-            return false;
-        }
-
-        if (txtPrecio.getText().trim().isEmpty()) {
-            mostrarAlerta("Validación", "Debe ingresar un precio.", Alert.AlertType.WARNING);
-            return false;
-        }
-
-        try {
-            Double.parseDouble(txtPrecio.getText().trim());
-        } catch (NumberFormatException e) {
-            mostrarAlerta("Validación", "El precio debe ser un número.", Alert.AlertType.WARNING);
+            mostrarAlerta("Validación", "Debe ingresar la hora (Ej: 14:30).", Alert.AlertType.WARNING);
             return false;
         }
 
         return true;
     }
 
-    // -----------------------------------------------------------
-    //                  BOTÓN CANCELAR
-    // -----------------------------------------------------------
-
+    // -----------------------------------------------------
+    //                   Botón Cancelar
+    // -----------------------------------------------------
     @FXML
     private void onCancel() {
         cerrarVentana();
     }
 
-    // -----------------------------------------------------------
-    //                     MÉTODOS UTILES
-    // -----------------------------------------------------------
-
+    // -----------------------------------------------------
+    //               Métodos útiles
+    // -----------------------------------------------------
     private void cerrarVentana() {
         Stage stage = (Stage) btnCancel.getScene().getWindow();
         stage.close();
@@ -155,4 +169,7 @@ public class FormularioController {
         alert.showAndWait();
     }
 
+    public void setDashboardController(DashboardController dashboardController) {
+        this.dashboardController = dashboardController;
+    }
 }

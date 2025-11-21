@@ -1,8 +1,9 @@
-package co.edu.uniquindio.poo.controllers;
+package co.edu.uniquindio.clinica.controllers;
 
 import java.io.IOException;
 
 import co.edu.uniquindio.clinica.model.HelloApplication;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,25 +21,24 @@ public class DashboardController {
     @FXML private Button btnGoToList;
 
     @FXML
-    public void initialize() { }
+    public void initialize() {
+        onGoToDashboard();
+    }
 
     @FXML
     private void onGoToForm() {
-        loadView("/view/FormularioController.fxml", "formulario");
+        loadView("/resources/FormularioCitas.fxml", "formulario");
     }
 
-    @FXML
-    private void onGoToList() {
-        loadView("/view/ListadoController.fxml", "listado");
-    }
+
 
     @FXML
     private void onGoToDashboard() {
         contentArea.getChildren().clear();
-        contentArea.getChildren().add(new Label("Bienvenido al sistema de gestión de Inmuebles"));
+        contentArea.getChildren().add(new Label("Bienvenido al sistema de gestión de Citas Médicas"));
     }
 
-    void backToDashboard() {
+    public void backToDashboard() {
         onGoToDashboard();
     }
 
@@ -47,13 +47,12 @@ public class DashboardController {
             FXMLLoader loader = new FXMLLoader(HelloApplication.class.getResource(fxmlPath));
             Parent view = loader.load();
 
-            if (typeView.equals("formulario")) {
-                FormularioController controller = loader.getController();
-                controller.setDashboardController(this);
-            } else if (typeView.equals("listado")) {
-                ListadoController controller = loader.getController();
-                controller.setDashboardController(this);
-                controller.loadInmuebles();
+            switch (typeView) {
+                case "formulario" -> {
+                    FormularioController controller = loader.getController();
+                    controller.setDashboardController(this);
+                }
+
             }
 
             contentArea.getChildren().clear();
@@ -64,12 +63,18 @@ public class DashboardController {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void onGoToList(ActionEvent event) {
+        System.out.println("Ir a lista...");
+        // Aquí después cargas la nueva vista si quieres
+    }
+
 
     private void showAlert(String title, String message, Alert.AlertType type) {
-        Alert alerta = new Alert(type);
-        alerta.setTitle(title);
-        alerta.setHeaderText(null);
-        alerta.setContentText(message);
-        alerta.showAndWait();
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
