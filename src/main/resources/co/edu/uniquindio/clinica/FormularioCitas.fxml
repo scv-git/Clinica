@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="20"
+      styleClass="root-container"
+      stylesheets="@styles1.css"
+      xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="co.edu.uniquindio.poo.controllers.FormularioController">
+
+    <padding>
+        <Insets bottom="30" left="30" right="30" top="30" />
+    </padding>
+
+    <Label styleClass="title" text="Crear Nueva Cita Médica">
+        <font>
+            <Font name="System Bold" size="28" />
+        </font>
+    </Label>
+
+    <VBox spacing="15" styleClass="card-panel">
+        <padding>
+            <Insets bottom="30" left="30" right="30" top="30" />
+        </padding>
+
+        <GridPane hgap="15" vgap="20">
+
+            <!-- MÉDICO -->
+            <Label styleClass="form-label" text="Médico:"
+                   GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <ComboBox fx:id="cbMedico" promptText="Seleccione un médico"
+                      styleClass="text-field"
+                      GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <!-- PACIENTE -->
+            <Label styleClass="form-label" text="Paciente:"
+                   GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <ComboBox fx:id="cbPaciente" promptText="Seleccione un paciente"
+                      styleClass="text-field"
+                      GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <!-- FECHA -->
+            <Label styleClass="form-label" text="Fecha:"
+                   GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <DatePicker fx:id="dpFecha" promptText="Seleccione la fecha"
+                        styleClass="text-field"
+                        GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+            <!-- HORA -->
+            <Label styleClass="form-label" text="Hora:"
+                   GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <TextField fx:id="txtHora" promptText="Ej: 14:30"
+                       styleClass="text-field"
+                       GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+            <!-- PRECIO -->
+            <Label styleClass="form-label" text="Precio:"
+                   GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <TextField fx:id="txtPrecio" promptText="Ingrese el precio"
+                       styleClass="text-field"
+                       GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+            <columnConstraints>
+                <ColumnConstraints minWidth="120" prefWidth="120" />
+                <ColumnConstraints hgrow="ALWAYS" minWidth="300" />
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+
+        </GridPane>
+
+        <HBox alignment="CENTER_RIGHT" spacing="15">
+            <VBox.margin>
+                <Insets top="20" />
+            </VBox.margin>
+            <Button fx:id="btnCancel" onAction="#onCancel" text="Cancelar" />
+            <Button fx:id="btnSave" onAction="#onSaveCita" text="Guardar Cita">
+                <font>
+                    <Font name="System Bold" size="14" />
+                </font>
+            </Button>
+        </HBox>
+
+    </VBox>
+
+</VBox>
