@@ -10,6 +10,7 @@ module co.edu.uniquindio.clinica {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires co.edu.uniquindio.clinica;
 
     opens co.edu.uniquindio.clinica to javafx.fxml;
     exports co.edu.uniquindio.clinica;
