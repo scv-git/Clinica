@@ -1,4 +1,4 @@
-package co.edu.uniquindio.clinica;
+package co.edu.uniquindio.clinica.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

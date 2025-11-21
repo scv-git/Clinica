@@ -1,4 +1,4 @@
-package co.edu.uniquindio.clinica;
+package co.edu.uniquindio.clinica.model;
 
 import javafx.application.Application;
 
